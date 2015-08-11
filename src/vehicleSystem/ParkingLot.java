@@ -4,24 +4,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ParkingLot {
-	private static ParkingLot parkingLotReference = new ParkingLot();
-	private final int parkingLotSize = 2;
-	private int currentSize = 0;
+	private final int parkingLotSize;
 	private List<Car> parkedCarList = new ArrayList();
 	
-	private ParkingLot(){}
-	
-	public static ParkingLot getInstance(){
-		return parkingLotReference;
+	public ParkingLot(int parkingLotSize){
+		this.parkingLotSize=parkingLotSize;
 	}
-
+	
 	public boolean park(Car car) {
-		if(currentSize < parkingLotSize)
+		
+		if(parkedCarList.size() < parkingLotSize && !parkedCarList.contains(car))
 		{
-			currentSize++;
-			parkedCarList.add(car);
+			parkedCarList.add(car);			
 			return true;
 		}
 		return false;
 	}
+
+	public boolean unPark(Car car) {
+		if(parkedCarList.contains(car))
+			return car == parkedCarList.remove(parkedCarList.indexOf(car));
+		else
+			return false;	
+	}
+	
+
 }
