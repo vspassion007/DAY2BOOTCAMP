@@ -1,38 +1,49 @@
 package vehicleSystem;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+
+import vehicleSystemExceptions.CarNotParkedException;
+import vehicleSystemExceptions.CarNotUnparkedException;
+import vehicleSystemExceptions.ParkingLotFullException;
 
 public class ParkingLot {
 	private final int parkingLotSize;
-	//private List<Car> parkedCarList = new ArrayList();
-	private Map<Token,Car> parkedCarList = new HashMap();
+	private Map<Token,Car> parkedCars = new HashMap<Token, Car>();
 	
 	public ParkingLot(int parkingLotSize){
 		this.parkingLotSize=parkingLotSize;
 	}
 	
-	public Token park(Car car) {
+	public Token park(Car car) {		
 		
-		if(parkedCarList.size() < parkingLotSize && !parkedCarList.containsValue(car))
+		boolean isNotParked = !parkedCars.containsValue(car);
+		if(!isParkingLotFull() && isNotParked)
 		{
 			Token token = new Token();
-			parkedCarList.put(token, car);
+			parkedCars.put(token, car);
 			return token;
 		}
-		return null;
+		else
+			throw new CarNotParkedException("Car Not Parked.");
 	}
 
 	public Car unPark(Token token) {
-		if(parkedCarList.containsKey(token)){
-			Car car = parkedCarList.get(token);
-			parkedCarList.remove(token);
+		if(parkedCars.containsKey(token)){
+			Car car = parkedCars.get(token);
+			parkedCars.remove(token);
 			return car;
 		}			
 		else
-			return null;
+			throw new CarNotUnparkedException("Car Not In Parking Lot.");
+	}
+	
+	public boolean isParkingLotFull()
+	{
+		if(parkedCars.size() >= parkingLotSize)
+			throw new ParkingLotFullException("Parking Lot is full.");
+		else
+			return false;
 	}
 	
 
