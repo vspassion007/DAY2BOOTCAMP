@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import vehicleSystem.Car;
 import vehicleSystem.ParkingLot;
+import vehicleSystem.Token;
 
 public class ParkingTest {
 	
@@ -13,7 +14,8 @@ public class ParkingTest {
 	public void testWhetherCarParksInParkingLot() {
 		Car car = new Car("101","Vikas");
 		ParkingLot parkingLot = new ParkingLot(20);
-		assertEquals(true, parkingLot.park(car));
+		
+		assertEquals(true, parkingLot.park(car) instanceof Token);
 		
 	}
 	@Test
@@ -21,15 +23,17 @@ public class ParkingTest {
 	{
 		Car car = new Car("101","Vikas");
 		ParkingLot parkingLot = new ParkingLot(20);
-		parkingLot.park(car);
-		assertEquals(true, parkingLot.unPark(car));
+		Token token = parkingLot.park(car);
+		
+		assertEquals(car, parkingLot.unPark(token));
 	}
 	@Test
 	public void shouldNotUnparkNonParkedCar()
 	{
 		Car car = new Car("101","Vikas");
 		ParkingLot parkingLot = new ParkingLot(20);
-		assertEquals(false, parkingLot.unPark(car));
+		
+		assertEquals(null, parkingLot.unPark(new Token()));
 	}
 	
 	@Test
@@ -37,10 +41,10 @@ public class ParkingTest {
 	{
 		Car car = new Car("101","Vikas");
 		ParkingLot parkingLot = new ParkingLot(1);
-		parkingLot.park(car);
-		parkingLot.unPark(car);
+		Token token = parkingLot.park(car);
+		car = parkingLot.unPark(token);
 		
-		assertEquals(true,	parkingLot.park(car));
+		assertEquals(true,	parkingLot.park(car) instanceof Token);
 	}
 
 	@Test
@@ -48,9 +52,9 @@ public class ParkingTest {
 	{
 		Car car = new Car("101","Vikas");
 		ParkingLot parkingLot = new ParkingLot(1);
-		parkingLot.park(car);
+		Token token = parkingLot.park(car);
 		
-		assertEquals(false,	parkingLot.park(car));
+		assertEquals(null,	parkingLot.park(car));
 	}
 	
 }

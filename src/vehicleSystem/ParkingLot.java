@@ -1,31 +1,38 @@
 package vehicleSystem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ParkingLot {
 	private final int parkingLotSize;
-	private List<Car> parkedCarList = new ArrayList();
+	//private List<Car> parkedCarList = new ArrayList();
+	private Map<Token,Car> parkedCarList = new HashMap();
 	
 	public ParkingLot(int parkingLotSize){
 		this.parkingLotSize=parkingLotSize;
 	}
 	
-	public boolean park(Car car) {
+	public Token park(Car car) {
 		
-		if(parkedCarList.size() < parkingLotSize && !parkedCarList.contains(car))
+		if(parkedCarList.size() < parkingLotSize && !parkedCarList.containsValue(car))
 		{
-			parkedCarList.add(car);			
-			return true;
+			Token token = new Token();
+			parkedCarList.put(token, car);
+			return token;
 		}
-		return false;
+		return null;
 	}
 
-	public boolean unPark(Car car) {
-		if(parkedCarList.contains(car))
-			return car == parkedCarList.remove(parkedCarList.indexOf(car));
+	public Car unPark(Token token) {
+		if(parkedCarList.containsKey(token)){
+			Car car = parkedCarList.get(token);
+			parkedCarList.remove(token);
+			return car;
+		}			
 		else
-			return false;	
+			return null;
 	}
 	
 
