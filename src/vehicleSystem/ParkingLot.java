@@ -21,8 +21,8 @@ public class ParkingLot {
 		this.parkingLotSize = parkingLotSize;
 		this.owner = owner;
 
-		Subscribe(NotificationType.PARKINGLOTFULL, owner);
-		Subscribe(NotificationType.PARKINGLOTVACANT, owner);
+		subscribe(NotificationType.PARKINGLOTFULL, owner);
+		subscribe(NotificationType.PARKINGLOTVACANT, owner);
 	}
 
 	public Token park(Car car) {
@@ -36,7 +36,7 @@ public class ParkingLot {
 				notifyToSubscribers(NotificationType.PARKINGLOTFULL);
 
 			if (parkedCars.size() == (int) ((parkingLotSize * 8) / 10))
-				notifyToSubscribers(NotificationType.PARKINGLOT80PERCENTfull);
+				notifyToSubscribers(NotificationType.PARKINGLOT80PERCENTFULL);
 
 			return token;
 		} else
@@ -60,7 +60,7 @@ public class ParkingLot {
 
 	}
 
-	public void Subscribe(NotificationType subscriberType, Subscriber subscriber) {
+	public void subscribe(NotificationType subscriberType, Subscriber subscriber) {
 		if (notifications.containsKey(subscriberType))
 			notifications.get(subscriberType).add(subscriber);
 		else {

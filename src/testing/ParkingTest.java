@@ -2,6 +2,9 @@ package testing;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -9,10 +12,12 @@ import vehicleSystem.Car;
 import vehicleSystem.FbiAgent;
 import vehicleSystem.NotificationType;
 import vehicleSystem.ParkingLot;
+import vehicleSystem.ParkingLotAttendant;
 import vehicleSystem.ParkingLotOwner;
 import vehicleSystem.Token;
 import vehicleSystemExceptions.CarNotParkedException;
 import vehicleSystemExceptions.CarNotUnparkedException;
+import vehicleSystemExceptions.ParkingLotNotAvailableException;
 import static org.mockito.Mockito.*;
 
 public class ParkingTest {
@@ -134,7 +139,7 @@ public class ParkingTest {
 		ParkingLotOwner parkingLotOwner = mock(ParkingLotOwner.class);
 		FbiAgent fbiAgent = mock(FbiAgent.class);
 		ParkingLot parkingLot = new ParkingLot(1, parkingLotOwner);
-		parkingLot.Subscribe(NotificationType.PARKINGLOTFULL, fbiAgent);
+		parkingLot.subscribe(NotificationType.PARKINGLOTFULL, fbiAgent);
 		parkingLot.park(car_1);
 
 		verify(fbiAgent, times(1))
@@ -148,7 +153,7 @@ public class ParkingTest {
 		FbiAgent fbiAgent = mock(FbiAgent.class);
 		ParkingLot parkingLot = new ParkingLot(2, parkingLotOwner);
 
-		parkingLot.Subscribe(NotificationType.PARKINGLOTFULL, fbiAgent);
+		parkingLot.subscribe(NotificationType.PARKINGLOTFULL, fbiAgent);
 		Token token_1 = parkingLot.park(car_1);
 		parkingLot.unPark(token_1);
 
@@ -161,7 +166,7 @@ public class ParkingTest {
 		FbiAgent fbiAgent = mock(FbiAgent.class);
 		ParkingLot parkingLot = new ParkingLot(4, parkingLotOwner);
 
-		parkingLot.Subscribe(NotificationType.PARKINGLOT80PERCENTfull,fbiAgent);
+		parkingLot.subscribe(NotificationType.PARKINGLOT80PERCENTFULL,fbiAgent);
 
 		Car car_1 = new Car("101", "Vikas");
 		parkingLot.park(car_1);
@@ -170,7 +175,7 @@ public class ParkingTest {
 		Car car_3 = new Car("103", "Tom");
 		parkingLot.park(car_3);
 
-		verify(fbiAgent, times(1)).notification(NotificationType.PARKINGLOT80PERCENTfull);
+		verify(fbiAgent, times(1)).notification(NotificationType.PARKINGLOT80PERCENTFULL);
 	}
 	
 	@Test
@@ -179,13 +184,13 @@ public class ParkingTest {
 		FbiAgent fbiAgent = mock(FbiAgent.class);
 		ParkingLot parkingLot = new ParkingLot(4, parkingLotOwner);
 
-		parkingLot.Subscribe(NotificationType.PARKINGLOT80PERCENTfull,fbiAgent);
+		parkingLot.subscribe(NotificationType.PARKINGLOT80PERCENTFULL,fbiAgent);
 
 		Car car_1 = new Car("101", "Vikas");
 		parkingLot.park(car_1);
 		Car car_2 = new Car("102", "Supriya");
 
-		verify(fbiAgent, never()).notification(NotificationType.PARKINGLOT80PERCENTfull);
+		verify(fbiAgent, never()).notification(NotificationType.PARKINGLOT80PERCENTFULL);
 	}
 	
 	@Test
@@ -194,7 +199,7 @@ public class ParkingTest {
 		FbiAgent fbiAgent = mock(FbiAgent.class);
 		ParkingLot parkingLot = new ParkingLot(4, parkingLotOwner);
 
-		parkingLot.Subscribe(NotificationType.PARKINGLOT80PERCENTfull,fbiAgent);
+		parkingLot.subscribe(NotificationType.PARKINGLOT80PERCENTFULL,fbiAgent);
 
 		Car car_1 = new Car("101", "Vikas");
 		parkingLot.park(car_1);
@@ -205,7 +210,8 @@ public class ParkingTest {
 		Car car_4 = new Car("104", "Jerry");
 		parkingLot.park(car_4);
 		
-		verify(fbiAgent, times(1)).notification(NotificationType.PARKINGLOT80PERCENTfull);
+		verify(fbiAgent, times(1)).notification(NotificationType.PARKINGLOT80PERCENTFULL);
 	}
 
+	
 }
