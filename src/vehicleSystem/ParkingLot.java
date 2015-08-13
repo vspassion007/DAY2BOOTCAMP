@@ -55,7 +55,7 @@ public class ParkingLot {
 			throw new CarNotUnparkedException("Car Not In Parking Lot.");
 	}
 
-	public boolean isParkingLotFull() {
+	private boolean isParkingLotFull() {
 		return parkedCars.size() >= parkingLotSize;
 
 	}
@@ -73,7 +73,7 @@ public class ParkingLot {
 		if (notifications.containsKey(subscriberType)) {
 			List<Subscriber> subscriberList = notifications.get(subscriberType);
 			for (Subscriber subscriber : subscriberList) {
-				subscriber.notification(subscriberType);
+				subscriber.notification(subscriberType,this);
 			}
 		}
 	}

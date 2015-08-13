@@ -2,5 +2,5 @@ package vehicleSystem;
 
 public interface Subscriber {
 
-	public void notification(NotificationType subscriberType);
+	public void notification(NotificationType subscriberType,ParkingLot parkingLot);
 }

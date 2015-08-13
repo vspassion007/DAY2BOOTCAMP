@@ -76,7 +76,7 @@ public class ParkingTest {
 		ParkingLot parkingLot = new ParkingLot(1, parkingLotOwner);
 		parkingLot.park(car);
 
-		verify(parkingLotOwner).notification(NotificationType.PARKINGLOTFULL);
+		verify(parkingLotOwner).notification(NotificationType.PARKINGLOTFULL,parkingLot);
 	}
 
 	@Test
@@ -87,7 +87,7 @@ public class ParkingTest {
 		parkingLot.park(car);
 
 		verify(parkingLotOwner, never()).notification(
-				NotificationType.PARKINGLOTFULL);
+				NotificationType.PARKINGLOTFULL,parkingLot);
 	}
 
 	@Test
@@ -102,7 +102,7 @@ public class ParkingTest {
 		} catch (CarNotParkedException e) {
 
 		} finally {
-			verify(parkingLotOwner).notification(NotificationType.PARKINGLOTFULL);
+			verify(parkingLotOwner).notification(NotificationType.PARKINGLOTFULL,parkingLot);
 		}
 	}
 
@@ -115,7 +115,7 @@ public class ParkingTest {
 		parkingLot.unPark(token);
 
 		verify(parkingLotOwner, times(1)).notification(
-				NotificationType.PARKINGLOTVACANT);
+				NotificationType.PARKINGLOTVACANT,parkingLot);
 	}
 
 	@Test
@@ -130,7 +130,7 @@ public class ParkingTest {
 		parkingLot.unPark(token_2);
 
 		verify(parkingLotOwner, times(1)).notification(
-				NotificationType.PARKINGLOTVACANT);
+				NotificationType.PARKINGLOTVACANT,parkingLot);
 	}
 
 	@Test
@@ -143,7 +143,7 @@ public class ParkingTest {
 		parkingLot.park(car_1);
 
 		verify(fbiAgent, times(1))
-				.notification(NotificationType.PARKINGLOTFULL);
+				.notification(NotificationType.PARKINGLOTFULL,parkingLot);
 	}
 
 	@Test
@@ -157,7 +157,7 @@ public class ParkingTest {
 		Token token_1 = parkingLot.park(car_1);
 		parkingLot.unPark(token_1);
 
-		verify(fbiAgent, never()).notification(NotificationType.PARKINGLOTFULL);
+		verify(fbiAgent, never()).notification(NotificationType.PARKINGLOTFULL,parkingLot);
 	}
 
 	@Test
@@ -175,7 +175,7 @@ public class ParkingTest {
 		Car car_3 = new Car("103", "Tom");
 		parkingLot.park(car_3);
 
-		verify(fbiAgent, times(1)).notification(NotificationType.PARKINGLOT80PERCENTFULL);
+		verify(fbiAgent, times(1)).notification(NotificationType.PARKINGLOT80PERCENTFULL,parkingLot);
 	}
 	
 	@Test
@@ -190,7 +190,7 @@ public class ParkingTest {
 		parkingLot.park(car_1);
 		Car car_2 = new Car("102", "Supriya");
 
-		verify(fbiAgent, never()).notification(NotificationType.PARKINGLOT80PERCENTFULL);
+		verify(fbiAgent, never()).notification(NotificationType.PARKINGLOT80PERCENTFULL,parkingLot);
 	}
 	
 	@Test
@@ -210,7 +210,7 @@ public class ParkingTest {
 		Car car_4 = new Car("104", "Jerry");
 		parkingLot.park(car_4);
 		
-		verify(fbiAgent, times(1)).notification(NotificationType.PARKINGLOT80PERCENTFULL);
+		verify(fbiAgent, times(1)).notification(NotificationType.PARKINGLOT80PERCENTFULL,parkingLot);
 	}
 
 	
