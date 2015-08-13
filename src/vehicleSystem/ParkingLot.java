@@ -5,22 +5,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.management.Notification;
+
 import vehicleSystemExceptions.CarNotParkedException;
 import vehicleSystemExceptions.CarNotUnparkedException;
 
-public class ParkingLot implements ParkingFullNotification,ParkingVacantNotification{
+public class ParkingLot {
 	private final int parkingLotSize;
 	private Map<Token, Car> parkedCars = new HashMap<Token, Car>();
 	private ParkingLotOwner owner;
-	private List<Subscriber> parkingFullNotificationSubscribers = new ArrayList<Subscriber>();
-	private List<Subscriber> parkingVacantNotificationSubscribers = new ArrayList<Subscriber>();
-	
+	private Map<NotificationType, List<Subscriber>> notifications = new HashMap<NotificationType, List<Subscriber>>();
+
 	public ParkingLot(int parkingLotSize, ParkingLotOwner owner) {
 		super();
 		this.parkingLotSize = parkingLotSize;
 		this.owner = owner;
-		parkingFullNotificationSubscribers.add(owner);
-		parkingVacantNotificationSubscribers.add(owner);
+
+		Subscribe(NotificationType.PARKINGLOTFULL, owner);
+		Subscribe(NotificationType.PARKINGLOTVACANT, owner);
 	}
 
 	public Token park(Car car) {
@@ -31,18 +33,14 @@ public class ParkingLot implements ParkingFullNotification,ParkingVacantNotifica
 			parkedCars.put(token, car);
 
 			if (parkedCars.size() == parkingLotSize)
-				notifyParkingFullToAll();
+				notifyToSubscribers(NotificationType.PARKINGLOTFULL);
+
+			if (parkedCars.size() == (int) ((parkingLotSize * 8) / 10))
+				notifyToSubscribers(NotificationType.PARKINGLOT80PERCENTfull);
 
 			return token;
 		} else
 			throw new CarNotParkedException("Car Not Parked.");
-	}
-	
-	@Override
-	public void notifyParkingVacantToAll() {
-		for (Subscriber subscriber : parkingVacantNotificationSubscribers) {
-			subscriber.notification();
-		}
 	}
 
 	public Car unPark(Token token) {
@@ -51,17 +49,10 @@ public class ParkingLot implements ParkingFullNotification,ParkingVacantNotifica
 			parkedCars.remove(token);
 
 			if (parkedCars.size() == parkingLotSize - 1)
-				notifyParkingVacantToAll();
-
+				notifyToSubscribers(NotificationType.PARKINGLOTVACANT);
 			return car;
 		} else
 			throw new CarNotUnparkedException("Car Not In Parking Lot.");
-	}
-
-	public void notifyParkingFullToAll() {
-		for (Subscriber subscriber : parkingFullNotificationSubscribers) {
-			subscriber.notification();
-		}
 	}
 
 	public boolean isParkingLotFull() {
@@ -69,15 +60,21 @@ public class ParkingLot implements ParkingFullNotification,ParkingVacantNotifica
 
 	}
 
-	public void addToParkingFullNotificationList(
-			Subscriber subscriber) {
-
-		parkingFullNotificationSubscribers.add(subscriber);
+	public void Subscribe(NotificationType subscriberType, Subscriber subscriber) {
+		if (notifications.containsKey(subscriberType))
+			notifications.get(subscriberType).add(subscriber);
+		else {
+			notifications.put(subscriberType, new ArrayList<Subscriber>());
+			notifications.get(subscriberType).add(subscriber);
+		}
 	}
 
-	public void addToParkingVacantNotificationList(Subscriber subscriber) {
-		parkingVacantNotificationSubscribers.add(subscriber);
-		
+	public void notifyToSubscribers(NotificationType subscriberType) {
+		if (notifications.containsKey(subscriberType)) {
+			List<Subscriber> subscriberList = notifications.get(subscriberType);
+			for (Subscriber subscriber : subscriberList) {
+				subscriber.notification(subscriberType);
+			}
+		}
 	}
-
 }
