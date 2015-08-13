@@ -8,40 +8,48 @@ import java.util.List;
 import org.junit.Test;
 
 import vehicleSystem.Car;
+import vehicleSystem.FirstAvailableParkingLot;
+import vehicleSystem.MaximumCapacityParkingLot;
+import vehicleSystem.MaximumVacantParkingLot;
 import vehicleSystem.NotificationType;
 import vehicleSystem.ParkingLot;
 import vehicleSystem.ParkingLotAttendant;
 import vehicleSystem.ParkingLotOwner;
+import vehicleSystem.ParkingLotSearchCriteria;
 import vehicleSystem.Token;
 import vehicleSystemExceptions.ParkingLotNotAvailableException;
 
 public class ParkingLotAttendantTest {
 
 	@Test
-	public void testWhetherAttendantDirectsToParkingLotSuccessfully(){
+	public void testWhetherAttendantDirectsToMaxVacantParkingLotSuccessfully(){
 		ParkingLotOwner parkingLotOwner = new ParkingLotOwner();
 		ParkingLot parkingLot_1 = new ParkingLot(1, parkingLotOwner);
+		ParkingLot parkingLot_2 = new ParkingLot(3, parkingLotOwner);
 		List<ParkingLot> parkingLots = new ArrayList<ParkingLot>();
-		parkingLots.add(parkingLot_1);
-		ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant(parkingLots);
-		
-		assertEquals(true, parkingLotAttendant.getParkingLot() instanceof ParkingLot);		
-	}
-	
-	/*@Test
-	public void testWhetherAttendantDirectsMultipleCarsToParkingLotSuccessfully(){
-		ParkingLotOwner parkingLotOwner = new ParkingLotOwner();
-		ParkingLot parkingLot_1 = new ParkingLot(1, parkingLotOwner);
-		ParkingLot parkingLot_2 = new ParkingLot(1, parkingLotOwner);
-		List<ParkingLot> parkingLots = new ArrayList<ParkingLot>();
+		ParkingLotSearchCriteria searchCriteria = new MaximumVacantParkingLot();
 		parkingLots.add(parkingLot_1);
 		parkingLots.add(parkingLot_2);
 		ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant(parkingLots);
-		Car car_1 = new Car("101", "Vikas");
-		parkingLotAttendant.getParkingLot().park(car_1);
 		
-		assertEquals(true, parkingLotAttendant.getParkingLot() instanceof ParkingLot);		
+		assertEquals(parkingLot_2, parkingLotAttendant.getParkingLot(searchCriteria));		
 	}
+	
+	
+	@Test
+	public void testWhetherAttendantDirectsToFirstVacantParkingLotSuccessfully(){
+		ParkingLotOwner parkingLotOwner = new ParkingLotOwner();
+		ParkingLot parkingLot_1 = new ParkingLot(1, parkingLotOwner);
+		ParkingLot parkingLot_2 = new ParkingLot(3, parkingLotOwner);
+		List<ParkingLot> parkingLots = new ArrayList<ParkingLot>();
+		ParkingLotSearchCriteria searchCriteria = new FirstAvailableParkingLot();
+		parkingLots.add(parkingLot_1);
+		parkingLots.add(parkingLot_2);
+		ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant(parkingLots);
+		
+		assertEquals(parkingLot_1, parkingLotAttendant.getParkingLot(searchCriteria));		
+	}
+	
 	
 	@Test(expected = ParkingLotNotAvailableException.class)
 	public void testWhetherAttendantDoesntDirectsToFullParkingLot(){
@@ -50,11 +58,27 @@ public class ParkingLotAttendantTest {
 		List<ParkingLot> parkingLots = new ArrayList<ParkingLot>();
 		parkingLots.add(parkingLot_1);
 		ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant(parkingLots);
+		ParkingLotSearchCriteria searchCriteria = new FirstAvailableParkingLot();
 		Car car_1 = new Car("101", "Vikas");
 		Car car_2 = new Car("102", "Supriya");
-		parkingLotAttendant.getParkingLot().park(car_1);
+		parkingLotAttendant.getParkingLot(searchCriteria).park(car_1);
 		
-		parkingLotAttendant.getParkingLot().park(car_2);		
-	}*/
+		parkingLotAttendant.getParkingLot(searchCriteria).park(car_2);		
+	}
+	
+	@Test
+	public void testWhetherAttendantDirectsToMaxCapacityParkingLotSuccessfully(){
+		ParkingLotOwner parkingLotOwner = new ParkingLotOwner();
+		ParkingLot parkingLot_1 = new ParkingLot(1, parkingLotOwner);
+		ParkingLot parkingLot_2 = new ParkingLot(3, parkingLotOwner);
+		List<ParkingLot> parkingLots = new ArrayList<ParkingLot>();
+		ParkingLotSearchCriteria searchCriteria = new MaximumCapacityParkingLot();
+		parkingLots.add(parkingLot_1);
+		parkingLots.add(parkingLot_2);
+		ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant(parkingLots);
+		
+		assertEquals(parkingLot_2, parkingLotAttendant.getParkingLot(searchCriteria));		
+	}
+	
 
 }

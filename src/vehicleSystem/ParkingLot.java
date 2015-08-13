@@ -77,4 +77,11 @@ public class ParkingLot {
 			}
 		}
 	}
+	
+	protected int getVacancy(){
+		return parkingLotSize-parkedCars.size();
+	}
+	protected int getCapacity(){
+		return parkingLotSize-parkedCars.size();
+	}
 }
